@@ -1,0 +1,4 @@
+*.sh
+*.php
+phpunit.xml
+tests/
