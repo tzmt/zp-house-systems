@@ -16,7 +16,7 @@ class Test_HS_Chart extends WP_UnitTestCase {
 
 		include dirname( __FILE__ ) . '/helper-expected-chart.php';
 		
-		foreach ( ZP_HS_Helper::get_house_systems() as $h_sys => $label ) {
+		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
 			// Set the default house system
 			global $zodiacpress_options;
@@ -60,7 +60,7 @@ class Test_HS_Chart extends WP_UnitTestCase {
 			'&#160;1&#176; <span class="zp-icon-virgo"> </span> 20\' 46' . $sec,// Michael Jackson
 		);
 
-		foreach ( ZP_HS_Helper::get_house_systems() as $h_sys => $label ) {
+		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
 			// Set the default house system
 			global $zodiacpress_options;

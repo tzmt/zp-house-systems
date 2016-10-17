@@ -10,11 +10,11 @@ class Test_House_Positions extends WP_UnitTestCase {
 	 */
 	public function test_house_position_numbers_regular() {
 
-		$charts = ZP_HS_Helper::create_charts( 'birthreport' );
-		unset( $charts[1] );
+		$person	= ZP_HS_Helper::person_0( 'birthreport' );// Steve Jobs
+		$chart	= ZP_HS_Helper::get_chart( $person );
 
 		// Expected house positions for Steve Jobs
-		$expected_h_pos[] = array(
+		$expected_h_pos = array(
 				'B' => array(
 					'0' => 6,
 					'1' => 7,
@@ -220,28 +220,24 @@ class Test_House_Positions extends WP_UnitTestCase {
 					'14' => 6
 				)
 		);
-
-		foreach ( $charts as $user => $chart ) {
 		
-			// Get house positions
+		// Get house positions
 
-			$zp_hs = zp_house_systems();
-			$zp_hs->setup_house_properties( $chart );			
-			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'planets_house_num' );
-			$calculated_h_pos[ $user ] = $property->getValue( $zp_hs );
+		$zp_hs = zp_house_systems();
+		$zp_hs->setup_house_properties( $chart );			
+		$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'planets_house_num' );
+		$calculated_h_pos = $property->getValue( $zp_hs );
 		
-			foreach ( ZP_HS_Helper::get_house_systems() as $h_sys => $label ) {
+		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
-				// Test the planets
-				for ( $i = 0; $i <= 14; $i++ ) {
-					$actual	= $calculated_h_pos[ $user ][ $h_sys ][ $i ];
-					$expected = $expected_h_pos[ $user ][ $h_sys ][ $i ];
-					$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', ' . $h_sys . ' houses, planet ' . $i );
+			// Test the planets
+			for ( $i = 0; $i <= 14; $i++ ) {
+				$actual	= $calculated_h_pos[ $h_sys ][ $i ];
+				$expected = $expected_h_pos[ $h_sys ][ $i ];
+				$this->assertEquals( $expected, $actual, $h_sys . ' houses, planet ' . $i );
 
-				}
 			}
 		}
-
 	}
 
 	/**
@@ -249,8 +245,8 @@ class Test_House_Positions extends WP_UnitTestCase {
 	 */
 	public function test_house_position_numbers_asc_mc() {
 
-		$charts = ZP_HS_Helper::create_charts( 'house_systems' );
-		$chart = $charts[1]; // Michael Jackson
+		$person	= ZP_HS_Helper::person_1( 'house_systems' );// Michael Jackson
+		$chart	= ZP_HS_Helper::get_chart( $person );
 
 		$expected_h_pos = array(
 				'X' => array(
@@ -282,7 +278,7 @@ class Test_House_Positions extends WP_UnitTestCase {
 
 		// Test that house positions are only set for house systems that do not align with ASC and/or MC
 
-		foreach ( ZP_HS_Helper::get_house_systems() as $h_sys => $label ) {
+		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
 			// Check for ASC
 			$h_sys_for_asc = array( 'X', 'M', 'V', 'W' );
@@ -312,10 +308,10 @@ class Test_House_Positions extends WP_UnitTestCase {
 	 * Test that house systems that align with ASC and MC do not give house position numbers of ASC & MC.
 	 */
 	public function test_house_position_numbers_no_asc_mc() {
-
-		$charts = ZP_HS_Helper::create_charts( 'house_systems' );
-		$chart = $charts[1]; // Michael Jackson
 	
+		$person	= ZP_HS_Helper::person_1( 'house_systems' );// Michael Jackson
+		$chart	= ZP_HS_Helper::get_chart( $person );
+
 		// Get house positions
 
 		$zp_hs = zp_house_systems();
@@ -323,7 +319,7 @@ class Test_House_Positions extends WP_UnitTestCase {
 		$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'planets_house_num' );
 		$calculated_h_pos = $property->getValue( $zp_hs );
 
-		foreach ( ZP_HS_Helper::get_house_systems() as $h_sys => $label ) {
+		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
 			// Check for ASC
 			$h_sys_for_asc = array( 'X', 'M', 'V', 'W' );

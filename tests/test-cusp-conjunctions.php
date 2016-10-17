@@ -1,7 +1,4 @@
 <?php
-/**
- * 
- */
 class Test_Cusp_Conjunctions extends WP_UnitTestCase {
 	
 	public function test_if_exec_enabled() {
@@ -14,9 +11,8 @@ class Test_Cusp_Conjunctions extends WP_UnitTestCase {
  	 */
 	public function test_house_cusp_conjunctions() {
 
-		$charts = ZP_HS_Helper::create_charts( 'birthreport' );
-
-		$chart = $charts[0];
+		$person	= ZP_HS_Helper::person_0( 'birthreport' );
+ 		$chart	= ZP_HS_Helper::get_chart( $person );
 
 		// Expected conjunctions for Steve Jobs
 		$expected_conjunctions = array(
@@ -232,7 +228,7 @@ class Test_Cusp_Conjunctions extends WP_UnitTestCase {
 		$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'conjunct_next_cusp' );
 		$calculated_conjunctions = $property->getValue( $zp_hs );
 
-		foreach ( ZP_HS_Helper::get_house_systems() as $h_sys => $label ) {
+		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
 			// Test the planets
 			for ( $i = 0; $i <= 14; $i++ ) {

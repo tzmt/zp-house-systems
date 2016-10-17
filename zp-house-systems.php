@@ -3,7 +3,7 @@
 Plugin Name: ZodiacPress House Systems
 Plugin URI:	https://cosmicplugins.com/downloads/zodiacpress-house-systems/
 Description: Set a desired house system for the ZodiacPress Birth Report. Also lets you add House Comparisons to the Birth Report to compare birth planets in multiple house systems.
-Version: 1.0
+Version: 1.2-beta1
 Author:	Isabel Castillo
 Author URI:	http://isabelcastillo.com
 License: GPL2
@@ -53,39 +53,16 @@ class ZP_House_Systems {
 	private $planets_house_num = array();
 
 	/**
-	 * All available house systems
-	 *
-	 * @var array
-	 */
-	private $house_systems = array();
-
-	/**
 	 * @var ZP_House_Systems The one true ZP_House_Systems
 	 */
 	private static $instance;
 
 	private function __construct() {
-
 		// do nothing if ZP is not activated
 		if ( ! class_exists( 'ZodiacPress', false ) ) {
 				return;
 		}
 	
-		$this->house_systems = array(
-			'B' => __( 'Alcabitius', 'zp-house-systems' ),
-			'C'	=> __( 'Campanus', 'zp-house-systems' ),
-			'E'	=> __( 'Equal', 'zp-house-systems' ),
-			'K'	=> __( 'Koch', 'zp-house-systems' ),
-			'X'	=> __( 'Meridian', 'zp-house-systems' ),
-			'M'	=> __( 'Morinus', 'zp-house-systems' ),
-			'P'	=> __( 'Placidus', 'zp-house-systems' ),
-			'O'	=> __( 'Porphyry', 'zp-house-systems' ),
-			'R'	=> __( 'Regiomontanus', 'zp-house-systems' ),
-			'T'	=> __( 'Topocentric', 'zp-house-systems' ),
-			'V'	=> __( 'Vehlow', 'zp-house-systems' ),
-			'W'	=> __( 'Whole Sign', 'zp-house-systems' )
-		);
-
 		add_filter( 'zp_default_house_system', array( $this, 'default_house_system' ) );
 		add_filter( 'zp_settings_natal', array( $this, 'settings' ) );
 		add_action( 'zp_setup_chart', array( $this, 'setup_house_properties' ) );
@@ -94,7 +71,6 @@ class ZP_House_Systems {
 		add_filter( 'zp_shortcode_default_form_title', array( $this, 'form_title' ), 10, 2 );
 		add_filter( 'zp_reports_require_birthtime', array( $this, 'require_birth_time' ) );
 		add_filter( 'zp_report_header_houses', array( $this, 'omit_houses_on_h_sys_report' ), 10, 2 );
-		add_filter( 'zp_house_system_label', array( $this, 'house_system_label' ), 10, 2 );
 		add_filter( 'zp_house_systems_report', array( $this, 'get_house_data_tables' ), 20, 3 );
 	}
 
@@ -126,7 +102,6 @@ class ZP_House_Systems {
 	 * Get the Compare House System data tables.
 	 */
 	public function get_house_data_tables( $default, $form, $chart ) {
-
 		if ( empty( $form['unknown_time'] ) ) {
 
 			$out = '';
@@ -149,7 +124,6 @@ class ZP_House_Systems {
 	 * Insert data tables after the Aspects section of Birth Report, if enabled.
 	 */
 	public function insert_tables( $default, $form, $chart ) {
-
 		$zp_options = get_option( 'zodiacpress_settings' );
 
 		if ( $form['unknown_time'] || empty( $zp_options['zphs_add_to_report'] ) ) {
@@ -163,15 +137,27 @@ class ZP_House_Systems {
 	 * Set all the properties for all house systems.
 	 */
 	public function setup_house_properties( $chart ) {
-
 		if ( empty( $chart ) ) {
 			return;
+		}
+		// Args for the ephemeris query
+		$args = array(
+			'format'		=> 'l',
+			'latitude'		=> $chart->latitude,
+			'longitude'		=> $chart->longitude,
+			'ut_date'		=> $chart->ut_date,
+			'ut_time'		=> $chart->ut_time
+		);
+
+		// If they want sidereal, set the sidereal flag for the ephemeris query
+		if ( $chart->sidereal ) {
+			$args['options'] = '-sid' . zp_get_sidereal_methods()[ $chart->sidereal ]['id'];
 		}
 
 		$planets = zp_get_planets( true );// planets that support house positions
 
 		// Get cusps for each house system
-		foreach ( $this->house_systems as $h_sys => $label ) {
+		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
 			// Don't query ephemeris for Whole Sign houses since it gives wrong calculations.
 			// Grab the ASC and manually calculate these.
@@ -179,8 +165,19 @@ class ZP_House_Systems {
 			if ( 'W' == $h_sys ) {
 				$ascendant			= $chart->planets_longitude[15];
 				$whole_sign_house_1	= floor( $ascendant / 30 ) * 30;
+
 			} else {
-				$data				= $chart->query_ephemeris( '', 'l', $h_sys );
+
+				if ( class_exists( 'ZP_Ephemeris' ) ) {
+					$args['house_system'] = $h_sys;
+					$ephemeris = new ZP_Ephemeris( $args );
+					$data = $ephemeris->query();
+				}
+				// @todo Deprecated. Will be removed in an upcoming version.
+				else {
+					$data = $chart->query_ephemeris( '', 'l', $h_sys );
+				}
+				
 			}
 			
 			// Capture the house cusps, which ephemeris outputs at index 0-11
@@ -191,7 +188,7 @@ class ZP_House_Systems {
 					$this_house = $whole_sign_house_1 + ( 30 * $x );
 					$this->cusps[ $h_sys ][ $x + 1 ] = ( $this_house >= 360 ) ? ( $this_house - 360 ) : $this_house;
 				} else {
-					$this->cusps[ $h_sys ][ $x + 1 ] = $data[ $x ];
+					$this->cusps[ $h_sys ][ $x + 1 ] = trim( $data[ $x ] );
 				}
 			}
 
@@ -243,13 +240,14 @@ class ZP_House_Systems {
 	 * Lists house number positions of planets and points in all our house systems.
 	 */
 	private function house_positions_table( $form ) {
-
 		if ( empty( $form ) || empty( $this->planets_house_num ) ) {
 			return false;
 		}
 
+		$sidereal = empty( $form['sidereal'] ) ? '' : __( ', Sidereal Zodiac', 'zp-house-systems' );
+
 		// Allow house systems to be removed
-		$house_systems = $this->house_systems;
+		$house_systems = zp_get_house_systems();
 		$omit = apply_filters( 'zphs_house_pos_table_omit_house_sys', array() );
 		foreach( $omit as $h ) {
 			unset( $house_systems[ $h ] );
@@ -258,8 +256,10 @@ class ZP_House_Systems {
 		$planets = zp_get_planets();
 
 		$table	= '<table id="zp-natal-planets-table" class="zp-data-table">';
-		$table .= '<caption class="zp-report-caption">' . sprintf( __( '%s\'s Planets\' and Points\' House Positions By House System', 'zp-house-systems' ),
-					$form['name'] ) . '</caption>';
+		$table .= '<caption class="zp-report-caption">' .
+				sprintf( __( '%1$s\'s Planets\' and Points\' House Positions By House System%2$s', 'zp-house-systems' ),
+					$form['name'],
+					$sidereal ) . '</caption>';
 
 		// Table head
 		$table .= '<thead><tr>' .
@@ -313,21 +313,24 @@ class ZP_House_Systems {
 	 * Lists house cusps for multiple house systems.
 	 */
 	private function cusps_table( $form ) {
-
 		if ( empty( $form ) ) {
 			return false;
 		}
 
+		$sidereal = empty( $form['sidereal'] ) ? '' : __( ', Sidereal Zodiac', 'zp-house-systems' );
+
 		// Allow house systems to be removed
-		$house_systems = $this->house_systems;
+		$house_systems = zp_get_house_systems();
 		$omit = apply_filters( 'zphs_cusps_table_omit_house_sys', array() );
 		foreach( $omit as $h ) {
 			unset( $house_systems[ $h ] );
 		}
 
 		$table = '<table id="zp-natal-cusps-table" class="zp-data-table">';
-		$table .= '<caption class="zp-report-caption">' . sprintf( __( '%s\'s House Cusps', 'zp-house-systems' ),
-					$form['name'] ) . '</caption>';
+		$table .= '<caption class="zp-report-caption">' .
+				sprintf( __( '%1$s\'s House Cusps%2$s', 'zp-house-systems' ),
+				$form['name'],
+				$sidereal ) . '</caption>';
 
 		// Table head
 		$table .= '<thead><tr>' .
@@ -376,7 +379,6 @@ class ZP_House_Systems {
 			border: 1px solid #dddddd;
 			display: inline-block;
   			vertical-align: top;
-			max-width: 100%;
 			overflow-x: auto;
 			white-space: nowrap;
 			-webkit-overflow-scrolling: touch;
@@ -443,10 +445,8 @@ class ZP_House_Systems {
 			#zp-natal-planets-table caption,
 			#zp-natal-cusps-table caption {
 				font-size: 1.3em;
-				padding: 8px 10ox;
+				padding: 8px 10px;
 				margin: 0;
-				font-weight: 700;
-				max-width:100%;
 			}';
 		wp_add_inline_style( 'zp', $css );
 	}
@@ -470,7 +470,7 @@ class ZP_House_Systems {
 						'name'		=> __( 'House System', 'zp-house-systems' ),
 						'type'		=> 'select',
 						'desc'		=> __( 'Which house system should be used to calculate house cusps for the Birth Report?', 'zp-house-systems' ),
-						'options'	=> $this->house_systems,
+						'options'	=> zp_get_house_systems(),
 						'std'		=> 'P'
 		);
 		$settings['report']['zphs_add_to_report'] = array(
@@ -500,13 +500,6 @@ class ZP_House_Systems {
 		return ( 'house_systems' == $variation ) ? '' : $houses;
 	}
 
-	/**
-	 * Filter the house system label that will dispaly on the birth report header.
-	 */
-	public function house_system_label( $label, $h_sys ) {
-		$label = $this->house_systems[ $h_sys ];
-		return $label;
-	}
 }
 
 /**

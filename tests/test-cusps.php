@@ -1,24 +1,22 @@
 <?php
 class Test_Cusps extends WP_UnitTestCase {
 
-	protected $charts;
+	protected $chart;
 	protected $expected_cusps = array();
 
 	public function setUp() {
-	
-		$charts = ZP_HS_Helper::create_charts( 'house_systems' );
 
-		unset( $charts[1] );// unset MJ
-		$this->charts = $charts;		
+		$person			= ZP_HS_Helper::person_0( 'house_systems' );
+ 		$this->chart	= ZP_HS_Helper::get_chart( $person );
 
 		/**
-		 * Set up expected cusps for all charts
+		 * Set up expected cusps
 		 */
 
 		$sec = chr(34);
 
 		// Expected cusps for Steve Jobs
-		$this->expected_cusps[] = array(
+		$this->expected_cusps = array(
 			'B' => array(
 				1 => '22&#176; <span class="zp-icon-virgo"> </span> 17\' 34' . $sec,// astro.com gets 39
 				2 => '23&#176; <span class="zp-icon-libra"> </span> 54\' 28' . $sec,// astro gets 30
@@ -204,184 +202,159 @@ class Test_Cusps extends WP_UnitTestCase {
 	}
 
 	public function test_alcabitius_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual	= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['B'][ $i ] );
-				$expected = $this->expected_cusps[ $user ]['B'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual	= zp_get_zodiac_sign_dms( $calculated_cusps['B'][ $i ] );
+				$expected = $this->expected_cusps['B'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_campanus_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['C'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['C'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['C'][ $i ] );
+				$expected	= $this->expected_cusps['C'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_equal_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['E'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['E'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['E'][ $i ] );
+				$expected	= $this->expected_cusps['E'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_koch_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['K'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['K'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['K'][ $i ] );
+				$expected	= $this->expected_cusps['K'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_meridian_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['X'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['X'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['X'][ $i ] );
+				$expected	= $this->expected_cusps['X'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_morinus_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['M'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['M'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['M'][ $i ] );
+				$expected	= $this->expected_cusps['M'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-
-		}
 
 	}
 
 	public function test_placidus_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['P'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['P'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['P'][ $i ] );
+				$expected	= $this->expected_cusps['P'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_porphyry_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['O'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['O'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['O'][ $i ] );
+				$expected	= $this->expected_cusps['O'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}	
 
 	public function test_regiomontanus_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['R'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['R'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['R'][ $i ] );
+				$expected	= $this->expected_cusps['R'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}	
 
 	public function test_topocentric_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['T'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['T'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['T'][ $i ] );
+				$expected	= $this->expected_cusps['T'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_vehlow_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['V'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['V'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['V'][ $i ] );
+				$expected	= $this->expected_cusps['V'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 
 	public function test_whole_sign_cusps() {
-		foreach ( $this->charts as $user => $chart ) {
 			// Get calculated house cusps
 			$zp_hs = zp_house_systems();		
-			$zp_hs->setup_house_properties( $chart );			
+			$zp_hs->setup_house_properties( $this->chart );			
 			$property = ZP_HS_Helper::get_private_property( 'ZP_House_Systems', 'cusps' );
-			$calculated_cusps[ $user ] = $property->getValue( $zp_hs );
+			$calculated_cusps = $property->getValue( $zp_hs );
 			for ( $i = 1; $i <= 12; $i++ ) {
-				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps[ $user ]['W'][ $i ] );
-				$expected	= $this->expected_cusps[ $user ]['W'][ $i ];
-				$this->assertEquals( $expected, $actual, 'for chart ' . $user . ', cusp ' . $i );
+				$actual		= zp_get_zodiac_sign_dms( $calculated_cusps['W'][ $i ] );
+				$expected	= $this->expected_cusps['W'][ $i ];
+				$this->assertEquals( $expected, $actual, ', cusp ' . $i );
 			}
-		}
 	}
 }

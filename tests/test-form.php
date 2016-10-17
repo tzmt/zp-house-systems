@@ -23,6 +23,7 @@ class Test_Form extends WP_UnitTestCase {
 				'action'				=> 'zp_birthreport',
 				'zp-report-variation'	=> 'house_systems',
 				'unknown_time'			=> '',
+				'house_system'			=> false,
 				'sidereal'				=> false
 		);
 
@@ -44,7 +45,7 @@ class Test_Form extends WP_UnitTestCase {
 		update_option('zodiacpress_settings', $zodiacpress_options );
 
 		ob_start();
-		zp_form( 'house_systems', array( 'report' => 'house_systems', 'sidereal' => false ) );
+		zp_form( 'house_systems', array( 'report' => 'house_systems', 'house_system' => false, 'sidereal' => false ) );
 		$form = ob_get_clean();
 
 		$this->assertFalse( strpos( $form, $str ), 'Error 1: House systems report form shows Unknown birth time checkbox.' );
@@ -56,7 +57,7 @@ class Test_Form extends WP_UnitTestCase {
 		update_option('zodiacpress_settings', $zodiacpress_options);
 
 		ob_start();
-		zp_form( 'house_systems', array( 'report' => 'house_systems', 'sidereal' => false ) );
+		zp_form( 'house_systems', array( 'report' => 'house_systems', 'house_system' => false, 'sidereal' => false ) );
 		$form = ob_get_clean();
 
 		$this->assertFalse( strpos( $form, $str ), 'Error 2: House systems report form shows Unknown birth time checkbox.' );
@@ -77,7 +78,7 @@ class Test_Form extends WP_UnitTestCase {
 		update_option('zodiacpress_settings', $zodiacpress_options );
 
 		ob_start();
-		zp_form( 'house_systems', array( 'report' => 'house_systems', 'sidereal' => false ) );
+		zp_form( 'house_systems', array( 'report' => 'house_systems', 'house_system' => false, 'sidereal' => false ) );
 		$form = ob_get_clean();
 
 		$this->assertContains( $str , $form, 'Error 3: House systems report form is missing the "Birth time is required" message.' );
@@ -93,7 +94,7 @@ class Test_Form extends WP_UnitTestCase {
 
 
 		ob_start();
-		zp_form( 'house_systems', array( 'report' => 'house_systems', 'sidereal' => false ) );
+		zp_form( 'house_systems', array( 'report' => 'house_systems', 'house_system' => false, 'sidereal' => false ) );
 		$form = ob_get_clean();
 
 		$this->assertContains( $str, $form, 'Error 4: House systems report form is missing the "Birth time is required" message.' );
@@ -114,7 +115,7 @@ class Test_Form extends WP_UnitTestCase {
 		update_option('zodiacpress_settings', $zodiacpress_options );
 
 		ob_start();
-		zp_form( 'house_systems', array( 'report' => 'house_systems', 'sidereal' => false ) );
+		zp_form( 'house_systems', array( 'report' => 'house_systems', 'house_system' => false, 'sidereal' => false ) );
 		$form = ob_get_clean();
 
 		$this->assertFalse( strpos( $form, $str ), 'Error 5: House systems report form is showing the unkown birth time NOTE at bottom of form.' );
@@ -129,7 +130,7 @@ class Test_Form extends WP_UnitTestCase {
 		$this->assertNotEmpty( $zodiacpress_options['birthreport_allow_unknown_bt'], 'Error 60: the birthreport_allow_unknown_bt is not enabled.' );
 
 		ob_start();
-		zp_form( 'house_systems', array( 'report' => 'house_systems', 'sidereal' => false ) );
+		zp_form( 'house_systems', array( 'report' => 'house_systems', 'house_system' => false, 'sidereal' => false ) );
 		$form = ob_get_clean();
 
 		$this->assertFalse( strpos( $form, $str ), 'Error 6: House systems report form is showing the unkown birth time NOTE at bottom of form.' );
