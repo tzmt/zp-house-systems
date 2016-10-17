@@ -11,6 +11,8 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: zp-house-systems
 Domain Path: languages
 
+Copyright 2106 Isabel Castillo
+
 ZodiacPress House Systems is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
