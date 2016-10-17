@@ -33,7 +33,7 @@ git push origin master --tags
 # zip the release plugin
 echo "Zipping $SLUG version: $NEWVERSION"
 cd ../
-zip -r ${SLUG}.${NEWVERSION}.zip $SLUG -x '*tests*' '*.git*' 'README.md' '*.xml' '*.sh' '*~*'
+zip -r ${SLUG}.${NEWVERSION}.zip $SLUG -x '*tests*' '*.git*' '*README.md' '*.xml' '*.sh' '*~*'
 echo "Moving the zipped plugin out to $READYFORSALE"
 mv ${SLUG}.${NEWVERSION}.zip $READYFORSALE
 
