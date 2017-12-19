@@ -462,19 +462,10 @@ class ZP_House_Systems {
 	}
 
 	/**
-	 * Add settings to the ZP settings
+	 * Add settings to the ZP settings Natal Report tab.
 	 */
 	public function settings( $settings ) {
-		
-		// Add settings to the Report section
-		$settings['report']['house_system'] = array(
-						'id'		=> 'house_system',
-						'name'		=> __( 'House System', 'zp-house-systems' ),
-						'type'		=> 'select',
-						'desc'		=> __( 'Which house system should be used to calculate house cusps for the Birth Report?', 'zp-house-systems' ),
-						'options'	=> zp_get_house_systems(),
-						'std'		=> 'P'
-		);
+		// Add setting to the Display section of the Natal Report tab.
 		$settings['report']['zphs_add_to_report'] = array(
 						'id'	=> 'zphs_add_to_report',
 						'name'	=> __( 'Add House Comparison Tables', 'zp-house-systems' ),
@@ -482,6 +473,15 @@ class ZP_House_Systems {
 						'desc'	=> __( 'Add the House Systems Comparison data tables to the bottom of the birth report. ', 'zp-house-systems' )
 		);
 
+		// Add setting to the Technical section of the Natal Report tab.
+		$settings['technical']['house_system'] = array(
+						'id'		=> 'house_system',
+						'name'		=> __( 'House System', 'zp-house-systems' ),
+						'type'		=> 'select',
+						'desc'		=> __( 'Which house system should be used to calculate house cusps for the Birth Report?', 'zp-house-systems' ),
+						'options'	=> zp_get_house_systems(),
+						'std'		=> 'P'
+		);
 		return $settings;
 	}
 		
