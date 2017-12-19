@@ -64,7 +64,7 @@ class ZP_House_Systems {
 		if ( ! class_exists( 'ZodiacPress', false ) ) {
 				return;
 		}
-	
+		add_action( 'init', array( $this, 'languages' ) );
 		add_filter( 'zp_default_house_system', array( $this, 'default_house_system' ) );
 		add_filter( 'zp_settings_natal', array( $this, 'settings' ) );
 		add_action( 'zp_setup_chart', array( $this, 'setup_house_properties' ) );
@@ -91,6 +91,17 @@ class ZP_House_Systems {
 			}
 			return self::$instance;
 	}
+
+	/**
+	 * Load plugin language files
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function languages() {
+		load_plugin_textdomain( 'zp-house-systems', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+	}
+
 	/**
 	 * Set the default house system for the Birth Report
 	 */
