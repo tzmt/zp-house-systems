@@ -3,15 +3,15 @@
 Plugin Name: ZodiacPress House Systems
 Plugin URI:	https://cosmicplugins.com/downloads/zodiacpress-house-systems/
 Description: Set a desired house system for the ZodiacPress Birth Report. Also lets you add House Comparisons to the Birth Report to compare birth planets in multiple house systems.
-Version: 1.2.1.alpha12190524
+Version: 1.2.1
 Author:	Isabel Castillo
-Author URI:	http://isabelcastillo.com
+Author URI:	https://isabelcastillo.com
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: zp-house-systems
 Domain Path: languages
 
-Copyright 2106 Isabel Castillo
+Copyright 2016-2017 Isabel Castillo
 
 ZodiacPress House Systems is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ along with ZodiacPress House Systems. If not, see <http://www.gnu.org/licenses/>
 */
 
 if ( class_exists( 'ZP_License' ) && is_admin() ) {
-	$zp_hs_license = new ZP_License( __FILE__, 'ZodiacPress House Systems', '1.2', 'Isabel Castillo' );// @todo update v
+	$zp_hs_license = new ZP_License( __FILE__, 'ZodiacPress House Systems', '1.2.1', 'Isabel Castillo' );// @todo update v
 }
 
 class ZP_House_Systems {
