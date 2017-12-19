@@ -3,7 +3,7 @@
 Plugin Name: ZodiacPress House Systems
 Plugin URI:	https://cosmicplugins.com/downloads/zodiacpress-house-systems/
 Description: Set a desired house system for the ZodiacPress Birth Report. Also lets you add House Comparisons to the Birth Report to compare birth planets in multiple house systems.
-Version: 1.2
+Version: 1.2.1.alpha12190524
 Author:	Isabel Castillo
 Author URI:	http://isabelcastillo.com
 License: GPL2
