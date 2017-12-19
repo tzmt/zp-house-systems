@@ -2,7 +2,17 @@
 /**
  * The path to the WordPress tests
  */
-$_tests_dir = ( strtolower( PHP_SHLIB_SUFFIX ) === 'dll' ) ? 'C:\Apache24\tmp\wordpress-tests-lib' : '/var/tmp/wordpress-tests-lib';
+$_tests_dir = getenv( 'WP_TESTS_DIR' );
+if ( ! $_tests_dir ) {
+	$_tests_dir = '/tmp/wordpress-tests-lib';
+}
+
+/**
+ * When using Windows
+ */
+if ( strtolower( PHP_SHLIB_SUFFIX ) === 'dll' ) {
+	$_tests_dir = 'C:\Apache24\tmp\wordpress-tests-lib';
+}
 
 /**
  * The WordPress tests functions.

@@ -3,6 +3,13 @@
  * Test that planets in conjunction to the next house cusp are calculated correctly
  */
 class Test_HS_Chart extends WP_UnitTestCase {
+	protected $expected_planets_longitude = array();
+
+	public function setUp() {
+
+		include dirname( __FILE__ ) . '/helper-expected-chart.php';
+
+	}
 
 	public function test_if_exec_enabled() {
 		$this->assertTrue( zp_is_func_enabled( 'exec' ) );
@@ -13,9 +20,6 @@ class Test_HS_Chart extends WP_UnitTestCase {
 	 * Test the ephemeris output for special points for all house systems
 	 */
 	public function test_ephemeris_special_points() {
-
-		include dirname( __FILE__ ) . '/helper-expected-chart.php';
-		
 		foreach ( zp_get_house_systems() as $h_sys => $label ) {
 
 			// Set the default house system
