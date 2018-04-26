@@ -3,7 +3,7 @@
 Plugin Name: ZodiacPress House Systems
 Plugin URI:	https://cosmicplugins.com/downloads/zodiacpress-house-systems/
 Description: Set a desired house system for the ZodiacPress Birth Report. Also lets you add House Comparisons to the Birth Report to compare birth planets in multiple house systems.
-Version: 1.2.1
+Version: 1.3-alpha.1
 Author:	Isabel Castillo
 Author URI:	https://isabelcastillo.com
 License: GPL2
@@ -27,6 +27,13 @@ You should have received a copy of the GNU General Public License
 along with ZodiacPress House Systems. If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+/****************************************************
+* @todo add this:
+'class' => 'zp-setting-checkbox-label'
+
+* 
+****************************************************/
 if ( class_exists( 'ZP_License' ) && is_admin() ) {
 	$zp_hs_license = new ZP_License( __FILE__, 'ZodiacPress House Systems', '1.2.1', 'Isabel Castillo' );// @todo update v
 }
@@ -120,7 +127,7 @@ class ZP_House_Systems {
 			$out = '';
 		
 			// Section title only for birth report, not House Comparison report
-			if ( 'birthreport' == $form['zp-report-variation'] ) {
+			if ( 'birthreport' === $form['zp-report-variation'] ) {
 				$out .= '<h3 class="zp-report-section-title">' . apply_filters( 'zphs_house_tables_section_title', __( 'Compare House Systems', 'zp-house-systems' ) ) . '</h3>';
 
 			}
@@ -206,7 +213,6 @@ class ZP_House_Systems {
 			}
 
 			// Set up the planets_house_num property
-
 			foreach ( $planets as $key => $planet ) {
 
 				$this->planets_house_num[ $h_sys ][ $key ] = zp_get_planet_house_num( $chart->planets_longitude[ $key ], $this->cusps[ $h_sys ] );
@@ -484,12 +490,20 @@ class ZP_House_Systems {
 						'desc'	=> __( 'Add the House Systems Comparison data tables to the bottom of the birth report. ', 'zp-house-systems' )
 		);
 
+
+		 /****************************************************
+		 * @todo
+		 *  @todo move  this setting to MISC tab, under atlas.
+		 since it will apply to all reports, even custom reports, not just Natal Report.
+
+		 ****************************************************/	
+
 		// Add setting to the Technical section of the Natal Report tab.
 		$settings['technical']['house_system'] = array(
 						'id'		=> 'house_system',
 						'name'		=> __( 'House System', 'zp-house-systems' ),
 						'type'		=> 'select',
-						'desc'		=> __( 'Which house system should be used to calculate house cusps for the Birth Report?', 'zp-house-systems' ),
+						'desc'		=> __( 'Which house system should be used to calculate house cusps for the birth report?', 'zp-house-systems' ),// @todo commit
 						'options'	=> zp_get_house_systems(),
 						'std'		=> 'P'
 		);
